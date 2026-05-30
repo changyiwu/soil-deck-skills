@@ -703,7 +703,7 @@ slide.addImage({
 >
 > **順序：批次生圖 → 視覺確認 → 嵌入 pptx**
 >
-> 本子流程使用使用者已安裝的 `draw` skill（gpt-image-2），腳本路徑：`C:/Users/mathr/.claude/skills/draw/draw.py`
+> 本子流程使用使用者已安裝的 `draw` skill（gpt-image-2），腳本路徑：`~/.claude/skills/draw/draw.py`
 
 ### role 對應的生圖與嵌入規則
 
@@ -736,7 +736,7 @@ mkdir -p slides/images
 # 以引擎五的 image_policy 為基底
 STYLE="扁平向量插畫、深夜藍#0D1B2A背景、亮青藍#00C6FF線條、金黃#FFD700點綴、教室或數位科技情境"
 NEG="不要逼真照片、不要雜亂背景"
-DRAW="python C:/Users/mathr/.claude/skills/draw/draw.py"
+DRAW="python ~/.claude/skills/draw/draw.py"
 
 # 逐張生成（每張取一個對應 illustration id 的檔名前綴）
 $DRAW "國中生在黑板前看著數學題目困惑思考，${STYLE}，${NEG}" \
@@ -1045,7 +1045,7 @@ python -m markitdown input.pptx
 - 圖形參數速查 → 見下方「幾何圖形參數速查（內嵌）」章節，無需讀取外部檔案
 
 本技能在生成 AI 插畫時，依賴使用者的 **draw skill**：
-- 腳本：`C:/Users/mathr/.claude/skills/draw/draw.py`
+- 腳本：`~/.claude/skills/draw/draw.py`
 - 模型：OpenAI **gpt-image-2**
 - 前置：`OPENAI_API_KEY` 已設在 shell、`.env`、或 `~/.openai.env`；OpenAI 組織已完成 Individual 驗證
 - 成本：low 約 NT$0.3/張、medium 約 NT$1.3/張、high 約 NT$5.5/張（預設用 low）

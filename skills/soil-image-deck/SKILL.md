@@ -204,11 +204,11 @@ image_policy:
 避免：{negative}。
 ```
 
-批次呼叫 `draw.py`（路徑 `C:/Users/mathr/.claude/skills/draw/draw.py`）：
+批次呼叫 `draw.py`（路徑 `~/.claude/skills/draw/draw.py`）：
 
 ```bash
 mkdir -p slides/images
-DRAW="python C:/Users/mathr/.claude/skills/draw/draw.py"
+DRAW="python ~/.claude/skills/draw/draw.py"
 SIZE="1536x1024"
 
 # 頁 1（封面升 medium）
@@ -249,7 +249,7 @@ $DRAW "全版插畫 + 大問句。圖像內容：一個卡通老師站在兩條�
 使用內建腳本 `pack_pptx.py`：
 
 ```bash
-python C:/Users/mathr/.claude-skills/soil-image-deck/pack_pptx.py \
+python ~/.claude/skills/soil-image-deck/pack_pptx.py \
   --images-dir slides/images \
   --output slides/我的簡報.pptx \
   --title "簡報標題"
@@ -368,7 +368,7 @@ python C:/Users/mathr/.claude-skills/soil-image-deck/pack_pptx.py \
 
 ## 依賴
 
-- `draw` skill（路徑 `C:/Users/mathr/.claude/skills/draw/draw.py`，gpt-image-2）
+- `draw` skill（路徑 `~/.claude/skills/draw/draw.py`，gpt-image-2）
 - `pack_pptx.py`（本技能內建，位於 skill 目錄下）
 - Python 套件：`openai`、`python-pptx`、`Pillow`
 
