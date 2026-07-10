@@ -22,6 +22,17 @@
 - 預設使用粗圓、飽滿、低稜角的繁體中文字體語言。
 - Codex 預設使用訂閱內建 Imagegen，不要求 API Key。
 
+## soil-html-deck v2
+
+新版 HTML 流程已升級為 Image Deck 的互動式上位輸出：
+
+- 共用 SOIL 教學流程、YAML Core、設計系統與受控版型。
+- 先寫 `soil_interactive_deck_v1` 規格，再產生 HTML。
+- 依資訊關係路由比較切換、Stepper、分類篩選、頁籤與決策互動。
+- 封面可使用 baked 圖；正文採真實 HTML 文字與原生 DOM／SVG／Canvas。
+- 支援鍵盤、觸控、窄螢幕、reduced motion 與靜態 fallback。
+- 可驗證為無外部依賴的單一離線 HTML。
+
 ## 安裝到 Codex
 
 安裝單一 Skill：
@@ -53,4 +64,3 @@ python "$HOME\.codex\skills\.system\skill-installer\scripts\install-skill-from-g
 - 系統沒有繁中粗圓字型時，停止並提示安裝，不默默替換成稜角黑體。
 
 MIT License，詳見 [LICENSE](LICENSE)。
-

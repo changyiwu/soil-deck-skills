@@ -1,0 +1,4 @@
+interface:
+  display_name: "SOIL Interactive HTML Deck"
+  short_description: "YAML 驅動的 SOIL 單檔互動 HTML 簡報"
+  default_prompt: "Use $soil-html-deck to turn my material into a YAML-planned, responsive, interactive SOIL HTML presentation."

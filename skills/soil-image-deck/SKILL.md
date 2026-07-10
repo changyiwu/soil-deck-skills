@@ -7,6 +7,8 @@ description: Create SOIL-style image-first teaching presentations in which every
 
 Use SOIL teaching decisions to create a coherent image-first deck. Produce a page plan and YAML design contract before image generation, lock the style with a golden sample, then generate, inspect, and package the deck.
 
+Keep the planning model renderer-neutral. The same SOIL core can later feed `soil-html-deck`; image-specific output fields belong to the Image renderer layer. Read `references/soil-deck-core.md` before authoring or migrating YAML.
+
 ## Configuration Axes
 
 - `output_mode`: `baked` or `plate`.
@@ -70,9 +72,9 @@ Keep formulas, precise geometry, charts, and numeric evidence native/editable wh
 ## References
 
 - Read `references/soil-engines.md` for required planning outputs.
+- Read `references/soil-deck-core.md` when the same plan may also produce an interactive HTML deck.
 - Read `references/yaml-profile.md` before writing `spec.yaml`.
 - Read `references/layout-recipes.md` before assigning layouts.
 - Read `references/prompting.md` before image generation.
 - Read `references/subagent-batching.md` when the user requests parallel generation.
 - Read `references/validation.md` before packaging and delivery.
-

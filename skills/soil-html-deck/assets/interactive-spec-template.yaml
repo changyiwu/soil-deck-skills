@@ -1,0 +1,95 @@
+schema_version: "soil_interactive_deck_v1"
+
+deck:
+  title: "Deck title"
+  audience: "Audience"
+  purpose: "Audience outcome"
+  takeaway: "One memorable conclusion"
+  language: "zh-TW"
+  slide_count: 3
+  output: "slides.html"
+  portability: "single_file"
+
+canvas:
+  target_ratio: "16:9"
+  responsive: true
+  narrow_breakpoint_px: 900
+  allow_active_slide_scroll: true
+
+soil_flow:
+  sequence: [hook, attention, action]
+
+design_system:
+  style_id: "custom_style_v1"
+  palette: {background: "#F5F1E8", primary: "#176B87", accent: "#F4A261", text: "#173042"}
+  fixed_shell: {title_anchor: "top_left", progress: true, phase_label: true, page_number: true}
+  typography:
+    font_feel: "粗圓、飽滿、低稜角、柔和端點"
+    avoid: "尖角、窄長、機械感、科技模板字"
+  motion: {duration_ms: 420, reduced_motion_fallback: true}
+
+layout_router:
+  allowed: [cover_hero, question_focus, misconception_dual, comparison_split, process_timeline, classification_grid, case_scene_analysis, relationship_map, data_focus, summary_three, action_next_step, section_divider]
+
+interaction_router:
+  allowed: [none, reveal, toggle_compare, stepper, filter_cards, tabs, decision_tree, sortable_table, chart, hotspot, slider, quiz, drag_match]
+  min_interactive_slides: 2
+  max_primary_interactions_per_slide: 1
+
+validation:
+  strict_offline: true
+  require_keyboard: true
+  require_touch: true
+  require_reduced_motion: true
+  require_static_fallback: true
+
+slides:
+  - page: 1
+    soil_phase: "hook"
+    role: "cover"
+    learning_task: "Know why the topic matters"
+    core_point: "One opening claim"
+    semantic_structure: "focus"
+    layout: {id: "cover_hero", variant: "left_title_right_visual"}
+    visible_text: {title: "Short title"}
+    speaker_only: "Opening talk track"
+    visual: {mode: "baked", brief: "Hero image brief", source: "assets/cover.png"}
+    interaction: {type: "none", goal: "", trigger: "click", initial_state: "cover", states: [], fallback: "Static cover"}
+    accessibility: {keyboard: true, touch: true, reduced_motion: true}
+  - page: 2
+    soil_phase: "attention"
+    role: "comparison"
+    learning_task: "Compare two options"
+    core_point: "One contrast"
+    semantic_structure: "contrast"
+    layout: {id: "comparison_split", variant: "interactive_toggle"}
+    visible_text: {title: "Compare"}
+    speaker_only: "Comparison talk track"
+    visual: {mode: "native", brief: "", source: ""}
+    interaction:
+      type: "toggle_compare"
+      goal: "Notice the meaningful difference"
+      trigger: "click"
+      initial_state: "overview"
+      states: [overview, option_a, option_b]
+      fallback: "Show both options side by side"
+    accessibility: {keyboard: true, touch: true, reduced_motion: true}
+
+  - page: 3
+    soil_phase: "action"
+    role: "action"
+    learning_task: "Choose one next step"
+    core_point: "One action"
+    semantic_structure: "decision"
+    layout: {id: "action_next_step", variant: "decision_cards"}
+    visible_text: {title: "Choose"}
+    speaker_only: "Closing talk track"
+    visual: {mode: "native", brief: "", source: ""}
+    interaction:
+      type: "decision_tree"
+      goal: "Select an appropriate next step"
+      trigger: "click"
+      initial_state: "unselected"
+      states: [choice_a, choice_b]
+      fallback: "Show both choices with criteria"
+    accessibility: {keyboard: true, touch: true, reduced_motion: true}
