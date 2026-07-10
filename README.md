@@ -1,64 +1,56 @@
 # SOIL 簡報技能集（SOIL Deck Skills）
 
-一組以 **李俊儀教授 SOIL Teaching Deck Workflow（六顆引擎）** 教學設計邏輯為核心的 **Agent Skills**，
-專注於把教材／主題轉化為**有教學力的簡報**。三個技能對應三種輸出格式，可供 Claude Code 或任何支援 Agent Skills 規格的 AI agent 直接讀取使用。
+以李俊儀教授 SOIL Teaching Deck Workflow 六顆引擎為核心，把教材與主題轉成有教學力的簡報。
 
-> 所有技能皆以**繁體中文**設計。圖像由 OpenAI `gpt-image-2` 生成。
+## Skills
 
----
+| Skill | 輸出 | 適用情境 |
+|---|---|---|
+| [`soil-image-deck`](skills/soil-image-deck/SKILL.md) | 全圖片或底圖＋可編輯文字 `.pptx` | NotebookLM 式圖片教學簡報、社群、研習開場 |
+| [`soil-teaching-deck`](skills/soil-teaching-deck/SKILL.md) | 可編輯 `.pptx` | 正式上課、公式、圖表與後續修改 |
+| [`soil-html-deck`](skills/soil-html-deck/SKILL.md) | 單一互動 `.html` | 線上研習、直播與互動教材 |
 
-## 📦 包含的技能
+## soil-image-deck v2
 
-| 技能 | 輸出格式 | 適用情境 | 額外檔案 |
-|------|----------|----------|----------|
-| [`soil-image-deck`](skills/soil-image-deck/SKILL.md) | `.pptx`（每頁一張 AI 全版圖） | 純圖片／全圖簡報，視覺震撼、像海報；每頁由 gpt-image-2 整頁生成 | `pack_pptx.py` |
-| [`soil-teaching-deck`](skills/soil-teaching-deck/SKILL.md) | `.pptx`（文字可編輯 + AI 插圖） | 標準上課用投影片；混合「可編輯文字 + AI 插圖」，也能診斷／改善既有簡報 | — |
-| [`soil-html-deck`](skills/soil-html-deck/SKILL.md) | 單一 `.html` | 自由度最高；可嵌互動圖表（Chart.js）、可點擊表格、影片、RWD、一鍵分享 URL，適合線上研習／直播 | — |
+新版流程已加入：
 
-### 三者怎麼選
+- SOIL 前四顆引擎完成後才建立 YAML。
+- 固定骨架＋受控版型＋逐頁資料。
+- 黃金樣張鎖定整份簡報風格。
+- 可選 Subagent 分批生圖。
+- `baked` 與 `plate` 兩種模式。
+- 預設使用粗圓、飽滿、低稜角的繁體中文字體語言。
+- Codex 預設使用訂閱內建 Imagegen，不要求 API Key。
 
-- 要**最快、最炫、整頁 AI 圖** → `soil-image-deck`
-- 要**之後還能在 PowerPoint 改字** → `soil-teaching-deck`
-- 要**互動、線上、可分享連結** → `soil-html-deck`
+## 安裝到 Codex
 
----
+安裝單一 Skill：
 
-## 🚀 給其他 Agent 使用
-
-純技能資料夾結構：
-
-```bash
-git clone https://github.com/mathruffian-dot/soil-deck-skills.git
+```powershell
+python "$HOME\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" `
+  --repo mathruffian-dot/soil-deck-skills `
+  --path skills/soil-image-deck
 ```
 
-讓你的 agent 讀取對應的 `skills/<技能名>/SKILL.md`，每份 frontmatter 都描述了觸發情境與操作步驟。
+安裝完整技能集：
 
-### 安裝到 Claude Code
-
-```bash
-# macOS / Linux
-cp -r soil-deck-skills/skills/* ~/.claude/skills/
-
-# Windows (PowerShell)
-Copy-Item soil-deck-skills/skills/* $HOME/.claude/skills/ -Recurse
+```powershell
+python "$HOME\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" `
+  --repo mathruffian-dot/soil-deck-skills `
+  --path skills/soil-image-deck skills/soil-teaching-deck skills/soil-html-deck
 ```
 
----
+## 生圖路徑
 
-## ⚠️ 使用前注意（重要：外部依賴）
+- Codex：預設使用內建 Imagegen 與訂閱額度。
+- 其他 Agent：使用其可用的圖片生成工具。
+- 只有使用者明確指定 API／CLI 時，才切換到 API Key 路徑。
 
-這三個技能都需要**生圖能力**，本 repo **未包含** `draw` 生圖技能本身。請先準備：
+## 字型政策
 
-| 依賴 | 說明 |
-|------|------|
-| **`draw` 生圖技能** | 三個技能都呼叫 gpt-image-2 生圖腳本。SKILL.md 內有寫死的本機路徑 `C:/Users/mathr/.claude/skills/draw/draw.py`，外部使用時請**替換成你自己的 gpt-image-2 生圖工具路徑**。 |
-| **`OPENAI_API_KEY`** | 生圖需要 OpenAI API key（設在 shell／`.env`／`~/.openai.env`）。gpt-image-2 需 OpenAI 組織完成 Individual 驗證。 |
-| **Python + python-pptx** | `soil-image-deck/pack_pptx.py` 把生成的 PNG 打包成 `.pptx`，需 Python 環境。SKILL.md 內 `pack_pptx.py` 路徑也是寫死的本機路徑，請改成本 repo 內的相對路徑 `skills/soil-image-deck/pack_pptx.py`。 |
+- `baked`：每次提示詞都要求繁體中文粗圓字，禁止尖角、窄長、機械感字型。
+- `plate`：優先使用 `jf open 粉圓 2.1`、`GenSenRounded TW`、`GenJyuuGothic`。
+- 系統沒有繁中粗圓字型時，停止並提示安裝，不默默替換成稜角黑體。
 
-> 簡而言之：把 SKILL.md 內所有 `C:/Users/mathr/...` 路徑換成你環境的對應路徑，並備妥 OpenAI API key，即可使用。
+MIT License，詳見 [LICENSE](LICENSE)。
 
----
-
-## 📄 授權
-
-MIT License，詳見 [LICENSE](LICENSE)。歡迎自由使用與修改。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SOIL Image Deck"
+  short_description: "用 SOIL 六引擎、黃金樣張與 YAML 生成一致的教學圖片簡報"
+  default_prompt: "Use $soil-image-deck to turn this teaching topic into a SOIL image-first deck."

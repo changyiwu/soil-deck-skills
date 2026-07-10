@@ -8,6 +8,8 @@ soil-image-deck 打包腳本
 import argparse
 import glob
 from pathlib import Path
+import platform
+import subprocess
 import yaml
 from PIL import Image
 from pptx import Presentation
@@ -51,6 +53,78 @@ DEFAULT_PALETTE = {
     "text": "#FFFFFF",
     "muted": "#A5B4CB",
 }
+
+ROUNDED_FONT_CANDIDATES = [
+    "jf open 粉圓 2.1",
+    "jf open 粉圓",
+    "GenSenRounded TW",
+    "GenJyuuGothic",
+    "源柔ゴシック",
+]
+
+
+def _installed_font_names() -> set[str]:
+    """Return installed font family/display names without adding dependencies."""
+    names: set[str] = set()
+    if platform.system() == "Windows":
+        try:
+            import winreg
+
+            key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+            for hive in (winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER):
+                try:
+                    with winreg.OpenKey(hive, key_path) as key:
+                        index = 0
+                        while True:
+                            try:
+                                display_name, _, _ = winreg.EnumValue(key, index)
+                            except OSError:
+                                break
+                            names.add(display_name.replace(" (TrueType)", "").strip())
+                            index += 1
+                except OSError:
+                    continue
+        except Exception:
+            pass
+    else:
+        try:
+            result = subprocess.run(
+                ["fc-list", "--format=%{family}\n"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            for line in result.stdout.splitlines():
+                names.update(part.strip() for part in line.split(",") if part.strip())
+        except OSError:
+            pass
+    return names
+
+
+def _norm_font(value: str) -> str:
+    return "".join(value.casefold().split())
+
+
+def resolve_rounded_font(style_cfg: dict) -> str:
+    """Choose an installed rounded CJK font; never silently use an angular fallback."""
+    requested = style_cfg.get("font_preferences") or []
+    if isinstance(requested, str):
+        requested = [requested]
+    candidates = list(dict.fromkeys([*requested, *ROUNDED_FONT_CANDIDATES]))
+    installed = _installed_font_names()
+    installed_by_norm = {_norm_font(name): name for name in installed}
+    for candidate in candidates:
+        normalized = _norm_font(candidate)
+        if normalized in installed_by_norm:
+            return installed_by_norm[normalized]
+        for installed_norm, installed_name in installed_by_norm.items():
+            if normalized in installed_norm or installed_norm in normalized:
+                return installed_name
+    raise SystemExit(
+        "plate 模式需要繁體中文粗圓字型。請先安裝以下任一字型："
+        + "、".join(ROUNDED_FONT_CANDIDATES[:3])
+        + "。為避免稜角字體，本技能不會默默替換成 Microsoft JhengHei。"
+    )
 
 
 def hex_to_rgb(h: str) -> RGBColor:
@@ -220,6 +294,7 @@ def pack_baked(images_dir: Path, output: Path):
 
     for prefix in sorted(by_page.keys()):
         png = by_page[prefix]
+        png = crop_to_ratio(png, 13.333, 7.5, images_dir)
         slide = prs.slides.add_slide(blank)
         slide.shapes.add_picture(png, 0, 0, prs.slide_width, prs.slide_height)
         print(f"  [baked] {prefix}  <-  {Path(png).name}")
@@ -234,7 +309,7 @@ def pack_plate(images_dir: Path, output: Path, spec_path: Path):
 
     palette = {**DEFAULT_PALETTE, **(spec.get("style", {}).get("palette", {}))}
     style_cfg = spec.get("style", {})
-    default_font = style_cfg.get("font", "Microsoft JhengHei")
+    default_font = resolve_rounded_font(style_cfg)
     title_font = style_cfg.get("title_font") or default_font
     body_font = style_cfg.get("body_font") or default_font
 

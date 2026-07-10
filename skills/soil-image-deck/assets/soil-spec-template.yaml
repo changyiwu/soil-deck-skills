@@ -1,0 +1,92 @@
+schema_version: "soil_image_deck_v2"
+
+deck:
+  title: "SOIL image deck"
+  audience: "Teachers"
+  purpose: "Teach one concept clearly"
+  takeaway: "One sentence students should retain"
+  language: "zh-TW"
+  output_mode: "baked"
+  planning_mode: "yaml_spec"
+  generation_strategy: "sequential"
+  style_lock: "golden_sample"
+  slide_count: 3
+
+canvas:
+  target_ratio: "16:9"
+  safe_area_pct: {left: 6, right: 6, top: 10, bottom: 10}
+
+soil_flow:
+  sequence: [hook, attention, action]
+  suggested_ratio: {hook: 0.2, attention: 0.6, action: 0.2}
+
+design_system:
+  visual_direction: "Warm educational editorial infographic"
+  palette:
+    background: "#F5F1E8"
+    primary: "#176B87"
+    highlight: "#F4A261"
+    text: "#173042"
+  typography:
+    font_feel: "粗圓、飽滿、低稜角的繁體中文無襯線字"
+    avoid: "尖角、窄長、機械感、科技模板字"
+    plate_font_preferences:
+      - "jf open 粉圓 2.1"
+      - "GenSenRounded TW"
+      - "GenJyuuGothic"
+  style_reference: "slides/images/page_02.png"
+  negative_prompt:
+    - "不要 Logo 或浮水印"
+    - "不要未指定文字"
+    - "不要螢幕、投影幕或 mockup"
+
+rhythm_policy:
+  max_same_layout_in_row: 1
+  alternate_visual_direction: true
+
+layout_router:
+  focus: "question_focus"
+  hierarchy: "relationship_map"
+  action: "action_next_step"
+
+slides:
+  - page: 1
+    soil_phase: "hook"
+    role: "question"
+    learning_task: "Care about the problem"
+    core_point: "The topic matters"
+    semantic_structure: "focus"
+    layout: {id: "question_focus", variant: "single_focal"}
+    visible_text: {title: "為什麼要學？"}
+    speaker_only: "Connect the question to the audience"
+    visual: "One concrete tension or question"
+    output: "slides/images/page_01.png"
+  - page: 2
+    soil_phase: "attention"
+    role: "relationship"
+    learning_task: "See how the parts relate"
+    core_point: "Three parts work together"
+    semantic_structure: "hierarchy"
+    layout: {id: "relationship_map", variant: "three_layer_stack"}
+    visible_text: {title: "三層一起工作", labels: ["概念", "脈絡", "頁面"]}
+    speaker_only: "Explain one layer at a time"
+    visual: "Three tactile layers connected into one teaching page"
+    output: "slides/images/page_02.png"
+  - page: 3
+    soil_phase: "action"
+    role: "action"
+    learning_task: "Apply the method"
+    core_point: "Start with the learning task"
+    semantic_structure: "action"
+    layout: {id: "action_next_step", variant: "center_statement"}
+    visible_text: {title: "先決定學習任務"}
+    speaker_only: "Ask the audience to apply the method"
+    visual: "A teacher placing the final card into a coherent deck"
+    output: "slides/images/page_03.png"
+
+validation:
+  regenerate_on:
+    - "文字錯誤"
+    - "字體不夠粗圓"
+    - "教學任務或版型不清楚"
+
