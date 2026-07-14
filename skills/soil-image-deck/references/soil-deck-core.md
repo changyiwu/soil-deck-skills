@@ -1,8 +1,8 @@
-# SOIL Deck Core
+# SOIL 簡報核心
 
-Use one renderer-neutral planning model for Image, PowerPoint, and HTML outputs.
+圖片、PowerPoint 與 HTML 輸出共用一套與渲染器無關的規劃模型。
 
-Core fields cover audience, purpose, SOIL flow, design system, page role, learning task, core point, semantic structure, visible copy, speaker-only content, and visual intent. Keep renderer-specific coordinates and behaviors outside the core.
+核心欄位涵蓋受眾、目的、SOIL 流程、設計系統、頁面角色、學習任務、核心重點、語意結構、可見文字、僅供講者使用的內容，以及視覺意圖。渲染器專屬的座標與行為須放在核心之外。
 
 ```yaml
 - page: 1
@@ -17,14 +17,14 @@ Core fields cover audience, purpose, SOIL flow, design system, page role, learni
   visual: {brief: "Concrete visual intent"}
 ```
 
-## Renderer mapping
+## 渲染器對應
 
-| Core field | Image/PPTX | Interactive HTML |
+| 核心欄位 | 圖片／PPTX | 互動 HTML |
 |---|---|---|
-| `visible_text` | baked or plate overlay | live DOM text |
-| `visual` | full slide or plate | hero/supporting asset |
-| `layout.id` | image composition | responsive component |
-| `semantic_structure` | visual relationship | interaction routing |
-| `speaker_only` | notes or talk track | optional speaker mode |
+| `visible_text` | baked 圖片文字或 plate 疊字 | 即時 DOM 文字 |
+| `visual` | 滿版投影片或底板 | 主視覺／輔助素材 |
+| `layout.id` | 圖片構圖 | 響應式元件 |
+| `semantic_structure` | 視覺關係 | 互動路由 |
+| `speaker_only` | 備忘稿或講述內容 | 選用的講者模式 |
 
-When upgrading an Image Deck to HTML, preserve the core and add HTML-only `interaction`, `accessibility`, responsive behavior, and static fallback fields. Do not restart concept planning unless the existing core is incomplete.
+將 Image Deck 升級為 HTML 時，保留核心內容，並加入 HTML 專屬的 `interaction`、`accessibility`、響應式行為與靜態備援欄位。除非現有核心不完整，否則不需重新進行概念規劃。

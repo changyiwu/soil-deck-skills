@@ -1,14 +1,13 @@
-# SOIL Subagent Batching
+# SOIL 子代理分批生成
 
-Use only when the user explicitly requests parallel generation and subagents are available.
+只有使用者明確要求平行生成，且環境提供子代理時才使用。
 
-1. Generate one representative content slide sequentially.
-2. Review teaching clarity, layout, exact text, rounded typography, and style.
-3. Save the approved golden sample and write its path into YAML.
-4. Assign non-overlapping page ranges.
-5. Give every worker the same spec, golden sample, output folder, and prompt contract.
-6. Require separate prompt logs and visual inspection.
-7. The primary agent reviews the final montage and selectively regenerates failures.
+1. 先依序生成一張具代表性的內容頁。
+2. 檢查教學清晰度、版型、精確文字、圓體字型與風格。
+3. 儲存已核准的黃金樣張，並將路徑寫入 YAML。
+4. 分派彼此不重疊的頁碼範圍。
+5. 提供每個工作代理相同的規格、黃金樣張、輸出資料夾與提示詞契約。
+6. 要求各自保留提示詞紀錄並完成視覺檢查。
+7. 由主要代理檢查最終蒙太奇總覽，並針對失敗頁面重新生成。
 
-Parallel generation shares quota and does not guarantee consistency without the golden sample.
-
+平行生成會共用額度；若沒有黃金樣張，也無法保證風格一致。

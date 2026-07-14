@@ -1,26 +1,25 @@
-# SOIL Deck Validation
+# SOIL 簡報驗證
 
-Validate teaching quality and artifact quality.
+同時驗證教學品質與成品品質。
 
-Teaching checks:
+教學檢查：
 
-- The deck follows 引起動機 → 維持注意 → 喚起行動.
-- Every page has one learning task and one core point.
-- The layout exposes the intended relationship.
-- Oral-only explanations are not crammed into the image.
+- 簡報遵循引起動機 → 維持注意 → 喚起行動。
+- 每頁只有一項學習任務與一個核心重點。
+- 版型能呈現預期的資訊關係。
+- 僅供口頭講述的說明未被硬塞進圖片。
 
-Image checks:
+圖片檢查：
 
-- Exact text is correct and no extra text appears.
-- Chinese display type is visibly bold and rounded, not angular or condensed.
-- Safe area, subject count, layout, palette, material, and golden-sample style pass.
-- No screen mockup, logo, watermark, or accidental UI appears.
+- 精確文字正確，且沒有多餘文字。
+- 中文展示字明顯粗圓，不尖銳也不窄長。
+- 安全區域、主體數量、版型、色盤、材質與黃金樣張風格均通過檢查。
+- 不得出現螢幕模型展示圖、Logo、浮水印或意外的 UI。
 
-Delivery checks:
+交付檢查：
 
-1. Validate YAML and image count/ratio.
-2. Inspect every source image and a montage.
-3. Package the deck.
-4. Render the exported PPTX and inspect the rendered montage.
-5. Run overflow checks and report final absolute paths.
-
+1. 驗證 YAML、圖片數量與比例。
+2. 檢查每張原始圖片及蒙太奇總覽。
+3. 封裝簡報。
+4. 渲染匯出的 PPTX，並檢查渲染後的蒙太奇總覽。
+5. 執行溢位檢查，並回報最終絕對路徑。

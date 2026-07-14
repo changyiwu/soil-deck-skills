@@ -1,16 +1,16 @@
-# SOIL Image Prompt Contract
+# SOIL 圖片提示詞契約
 
-Compile prompts in this order:
+依下列順序組合提示詞：
 
-1. Full 16:9 slide image and safe area.
-2. Controlled layout and reading path.
-3. Teaching visual and information relationship.
-4. Exact visible text for baked mode.
-5. Shared style and golden-sample reference.
-6. Rounded Traditional Chinese typography.
-7. Negative prompt.
+1. 完整的 16:9 投影片圖片與安全區域。
+2. 受控版型與閱讀動線。
+3. 教學視覺與資訊關係。
+4. `baked` 模式中要出現的精確文字。
+5. 共用風格與黃金樣張參考。
+6. 圓體繁體中文字型。
+7. 負面提示詞。
 
-Rounded typography block:
+圓體字型區塊：
 
 ```text
 Typography: bold rounded Traditional Chinese display lettering with thick even
@@ -20,7 +20,6 @@ sharp wedges, thin strokes, or techno-stencil lettering. Render only the quoted
 text, exactly once, with no extra characters.
 ```
 
-State that the output is the slide itself, not a screen, projector, or mockup.
+必須說明輸出內容就是投影片本身，而不是螢幕、投影幕或模型展示圖。
 
-For plate mode, prohibit all text and generate calm reserved zones around the final overlay layout.
-
+使用 `plate` 模式時，禁止出現任何文字，並依最終疊字版型在周圍生成平靜、留白充足的保留區。

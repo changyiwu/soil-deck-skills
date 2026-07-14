@@ -1,80 +1,80 @@
 ---
 name: soil-image-deck
-description: Create SOIL-style image-first teaching presentations in which every slide is driven by an AI-generated full-page visual. Use when the user asks for a SOIL image deck, pure-image teaching slides, NotebookLM-style educational slides, a YAML-driven SOIL deck, visual-impact teacher training slides, or a baked/plate PPTX that follows 引起動機、維持注意、喚起行動 and the SOIL six-engine workflow.
+description: 建立 SOIL 風格、以圖片為核心的教學簡報，每張投影片皆由 AI 生成的全頁視覺主導。當使用者要求 SOIL 圖片簡報、純圖片教學投影片、NotebookLM 風格教育簡報、YAML 驅動的 SOIL 簡報、具視覺衝擊力的教師研習投影片，或遵循引起動機、維持注意、喚起行動與 SOIL 六引擎工作流的 baked/plate PPTX 時使用。
 ---
 
-# SOIL Image Deck
+# SOIL 圖片簡報
 
-Use SOIL teaching decisions to create a coherent image-first deck. Produce a page plan and YAML design contract before image generation, lock the style with a golden sample, then generate, inspect, and package the deck.
+運用 SOIL 教學判斷建立一致、以圖片為核心的簡報。先產出頁面計畫與 YAML 設計契約，再開始生成圖片；以黃金樣張鎖定風格，接著生成、檢查並封裝簡報。
 
-Keep the planning model renderer-neutral. The same SOIL core can later feed `soil-html-deck`; image-specific output fields belong to the Image renderer layer. Read `references/soil-deck-core.md` before authoring or migrating YAML.
+規劃模型須與渲染器無關。同一份 SOIL 核心日後也能提供給 `soil-html-deck` 使用；圖片專屬的輸出欄位應歸在圖片渲染層。撰寫或遷移 YAML 前，先閱讀 `references/soil-deck-core.md`。
 
-## Configuration Axes
+## 設定軸
 
-- `output_mode`: `baked` or `plate`.
-- `planning_mode`: `quick` or `yaml_spec`.
-- `generation_strategy`: `sequential` or `subagents`.
-- `style_lock`: `none` or `golden_sample`.
+- `output_mode`：`baked` 或 `plate`。
+- `planning_mode`：`quick` 或 `yaml_spec`。
+- `generation_strategy`：`sequential` 或 `subagents`。
+- `style_lock`：`none` 或 `golden_sample`。
 
-Default to `yaml_spec`, `sequential`, and `golden_sample`. Use `subagents` only when the user explicitly requests parallel generation and the environment permits it.
+預設使用 `yaml_spec`、`sequential` 與 `golden_sample`。只有使用者明確要求平行生成，且環境允許時，才使用 `subagents`。
 
-## Hard Image Rule
+## 圖片硬性規則
 
-- Generate every slide visual with Codex built-in image generation first.
-- Do not replace image generation with Pillow, CSS, SVG, procedural shapes, or placeholders.
-- Use an API/CLI image path only when the user explicitly requests it.
-- Save every accepted image inside the project before packaging.
+- 每張投影片的視覺都必須優先使用 Codex 內建圖片生成功能製作。
+- 不得用 Pillow、CSS、SVG、程序化圖形或預留位置取代圖片生成。
+- 只有使用者明確要求時，才改用 API／CLI 圖片生成路徑。
+- 封裝前，將每張採用的圖片儲存在專案內。
 
-## Rounded Typography Policy
+## 圓體字型政策
 
-Default to bold rounded Traditional Chinese display lettering: thick even strokes, soft terminals, generous counters, friendly proportions, and low corner sharpness.
+預設使用粗圓的繁體中文展示字：筆畫粗細均勻、端點柔和、字腔寬鬆、比例親切、轉角低銳度。
 
-For `baked`, repeat the rounded typography requirement in every image prompt. Prohibit angular geometric Chinese type, condensed mechanical type, sharp wedges, and techno-stencil forms.
+使用 `baked` 時，每則圖片提示詞都要重申圓體字型要求，並禁止尖角幾何中文字、窄長機械字、尖銳楔形與科技模板字。
 
-For `plate`, use the first installed font from `jf open 粉圓 2.1`, `GenSenRounded TW`, or `GenJyuuGothic`. If none is installed, stop before packaging and report the missing rounded Chinese font. Never silently fall back to an angular default.
+使用 `plate` 時，依序採用系統已安裝的 `jf open 粉圓 2.1`、`GenSenRounded TW` 或 `GenJyuuGothic`。若都未安裝，必須在封裝前停止並回報缺少圓體中文字型，絕不能無聲改用尖角的預設字型。
 
-## SOIL Six-Engine Workflow
+## SOIL 六引擎工作流
 
-1. **Concept positioning**: one big idea, three sub-ideas, misunderstandings, takeaway, minimal fact pack, and slide-vs-talk split.
-2. **Context positioning**: arrange 引起動機 → 維持注意 → 喚起行動. A 10-slide default rhythm is approximately 2 / 6 / 2.
-3. **Page architecture**: give each page one role, one core point, one learning task, one semantic relationship, one `layout.id`, minimal visible text, and one visual brief.
-4. **Cognitive editing**: check 降雜訊、區塊化、增資訊、結構化、順脈絡、步驟化.
-5. **Style construction**: create `spec.yaml` from `assets/soil-spec-template.yaml`; define palette, fixed shell, rounded typography, layout router, safe area, image policy, and validation rules.
-6. **Production**: validate YAML, approve a golden sample, generate images, inspect the montage, selectively regenerate failed pages, package the PPTX, render it again, and verify delivery.
+1. **概念定位**：定義一個總概念、三個子概念、常見誤解、帶走重點、最小事實包，以及投影片與口頭講述的分工。
+2. **脈絡定位**：安排引起動機 → 維持注意 → 喚起行動。10 頁簡報的預設節奏約為 2／6／2。
+3. **頁面架構**：每頁只設定一個角色、一個核心重點、一項學習任務、一種語意關係、一個 `layout.id`、最少可見文字與一份視覺簡述。
+4. **認知編修**：檢查降雜訊、區塊化、增資訊、結構化、順脈絡、步驟化。
+5. **風格建構**：依 `assets/soil-spec-template.yaml` 建立 `spec.yaml`；定義色盤、固定框架、圓體字型、版型路由、安全區域、圖片政策與驗證規則。
+6. **製作**：驗證 YAML、核准黃金樣張、生成圖片、檢查蒙太奇總覽、針對失敗頁面重新生成、封裝 PPTX、再次渲染並驗證交付成果。
 
-When the user supplies an existing validated SOIL YAML spec, skip engines 1–5 only if its concept, flow, page roles, and visual system are already explicit.
+若使用者提供已驗證的 SOIL YAML 規格，只有在概念、流程、頁面角色與視覺系統都已明確定義時，才能略過引擎 1–5。
 
-## Production Commands
+## 製作命令
 
-Validate YAML:
+驗證 YAML：
 
 ```powershell
 python .\scripts\validate_spec.py --spec .\spec.yaml
 ```
 
-Verify generated images:
+驗證生成圖片：
 
 ```powershell
 python .\scripts\verify_images.py --spec .\spec.yaml --images-dir .\slides\images
 ```
 
-In Codex, package with the Presentations skill and Artifact Tool. Embed one full-bleed image per slide, render the exported PPTX, inspect the montage, and run overflow checks.
+在 Codex 中，使用 Presentations skill 與 Artifact Tool 封裝。每張投影片嵌入一張滿版圖片，渲染匯出的 PPTX、檢查蒙太奇總覽，並執行溢位檢查。
 
-For environments without Artifact Tool, `scripts/pack_pptx.py` is a portability fallback. It center-crops baked images to 16:9 and refuses silent substitution when no rounded Chinese font is available for `plate` mode.
+若環境沒有 Artifact Tool，可使用 `scripts/pack_pptx.py` 作為可攜式備援方案。它會將 baked 圖片置中裁切成 16:9；在 `plate` 模式下若找不到圓體中文字型，則拒絕無聲替換字型。
 
-## Output Modes
+## 輸出模式
 
-- `baked`: the generated image contains the short visible text. Best for demos, social sharing, openings, and visual storytelling.
-- `plate`: generate a text-free designed plate with reserved text zones; overlay editable text afterward. Best for long-lived teaching decks, revisions, formulas, and exact data.
+- `baked`：生成圖片內含精簡的可見文字。適合展示、社群分享、開場與視覺敘事。
+- `plate`：生成無文字的設計底板並預留文字區，之後疊加可編輯文字。適合長期使用的教學簡報、後續修改、公式與精確資料。
 
-Keep formulas, precise geometry, charts, and numeric evidence native/editable when correctness matters.
+當正確性很重要時，公式、精確幾何圖、圖表與數字證據應保留為原生可編輯元素。
 
-## References
+## 參考文件
 
-- Read `references/soil-engines.md` for required planning outputs.
-- Read `references/soil-deck-core.md` when the same plan may also produce an interactive HTML deck.
-- Read `references/yaml-profile.md` before writing `spec.yaml`.
-- Read `references/layout-recipes.md` before assigning layouts.
-- Read `references/prompting.md` before image generation.
-- Read `references/subagent-batching.md` when the user requests parallel generation.
-- Read `references/validation.md` before packaging and delivery.
+- 閱讀 `references/soil-engines.md`，了解必要的規劃輸出。
+- 同一份計畫也可能產生互動 HTML 簡報時，閱讀 `references/soil-deck-core.md`。
+- 撰寫 `spec.yaml` 前，閱讀 `references/yaml-profile.md`。
+- 指派版型前，閱讀 `references/layout-recipes.md`。
+- 生成圖片前，閱讀 `references/prompting.md`。
+- 使用者要求平行生成時，閱讀 `references/subagent-batching.md`。
+- 封裝與交付前，閱讀 `references/validation.md`。

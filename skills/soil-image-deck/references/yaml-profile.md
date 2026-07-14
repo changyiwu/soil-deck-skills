@@ -1,6 +1,6 @@
-# SOIL YAML Profile
+# SOIL YAML 規格
 
-Use these top-level sections:
+使用下列頂層區段：
 
 ```yaml
 schema_version: "soil_image_deck_v2"
@@ -14,9 +14,9 @@ slides: []
 validation: {}
 ```
 
-The fixed layer belongs in `design_system`; controlled layout choices belong in `layout_router`; page teaching data belongs in `slides`.
+固定層歸入 `design_system`；受控版型選擇歸入 `layout_router`；各頁教學資料歸入 `slides`。
 
-Required per-slide fields:
+每張投影片的必要欄位：
 
 ```yaml
 - page: 1
@@ -32,5 +32,4 @@ Required per-slide fields:
   output: "slides/images/page_01.png"
 ```
 
-Use percentage zones for image prompts. Use PowerPoint coordinates only in `plate` overlay blocks.
-
+圖片提示詞使用百分比區域。只有 `plate` 疊字區塊能使用 PowerPoint 座標。

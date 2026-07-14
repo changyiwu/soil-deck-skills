@@ -1,34 +1,33 @@
-# SOIL Planning Outputs
+# SOIL 規劃輸出
 
-## Engine 1: Concept
+## 引擎一：概念
 
-- One central idea.
-- Three supporting ideas.
-- Three likely misunderstandings.
-- One takeaway sentence.
-- Minimal fact pack.
-- Slide-visible content versus oral-only content.
+- 一個總概念。
+- 三個支撐總概念的子概念。
+- 三個可能的常見誤解。
+- 一句帶走重點。
+- 最小事實包。
+- 投影片可見內容與僅供口頭講述內容的分工。
 
-## Engine 2: Context
+## 引擎二：脈絡
 
-- 引起動機: pain, curiosity, or a relevant question.
-- 維持注意: explain, compare, classify, visualize, and practice.
-- 喚起行動: synthesize, decide, apply, or take the next step.
+- 引起動機：痛點、好奇心或切身相關的問題。
+- 維持注意：解釋、比較、分類、視覺化與練習。
+- 喚起行動：統整、判斷、應用或採取下一步。
 
-## Engine 3: Page Architecture
+## 引擎三：頁面架構
 
-For every page specify page number, SOIL phase, role, core point, learning task, semantic relationship, layout ID, visible text, oral-only content, visual brief, and output path.
+每頁都要指定頁碼、SOIL 階段、角色、核心重點、學習任務、語意關係、版型 ID、可見文字、僅供口頭講述的內容、視覺簡述與輸出路徑。
 
-## Engine 4: Cognitive Editing
+## 引擎四：認知編修
 
-- 降雜訊: remove decoration and repeated content.
-- 區塊化: group related information.
-- 增資訊: add labels, arrows, examples, or contrast only when helpful.
-- 結構化: expose hierarchy and relationships.
-- 順脈絡: place prerequisite ideas first.
-- 步驟化: turn procedures into visible stages.
+- 降雜訊：移除裝飾與重複內容。
+- 區塊化：將相關資訊分組。
+- 增資訊：只在有助理解時加入標籤、箭頭、範例或對比。
+- 結構化：呈現階層與關係。
+- 順脈絡：先安排先備概念。
+- 步驟化：將程序轉成可見的階段。
 
-## Engines 5–6
+## 引擎五至六
 
-Write the YAML design contract only after engines 1–4. Then generate and validate the deck; do not use YAML as a substitute for teaching judgment.
-
+完成引擎一至四後，才撰寫 YAML 設計契約。接著生成並驗證簡報；不可用 YAML 取代教學判斷。

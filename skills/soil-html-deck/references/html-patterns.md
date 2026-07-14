@@ -1,8 +1,8 @@
-# SOIL HTML Patterns
+# SOIL HTML 模式
 
-## Page shell
+## 頁面框架
 
-Use full-viewport slide sections with a progress bar, SOIL phase label, page number, explicit navigation controls, and a centered safe-area container.
+使用占滿視窗的投影片區段，包含進度列、SOIL 階段標籤、頁碼、明確導覽控制項，以及置中的安全區域容器。
 
 ```html
 <main id="deck">
@@ -10,11 +10,11 @@ Use full-viewport slide sections with a progress bar, SOIL phase label, page num
 </main>
 ```
 
-Avoid a fixed 1920×1080 canvas scaled with transforms. Use CSS grid/flex, `clamp()`, aspect ratios, and breakpoint-specific reflow. On narrow screens, allow the active page to scroll vertically rather than shrinking text below readability.
+避免使用固定 1920×1080 畫布再以 transform 縮放。使用 CSS grid／flex、`clamp()`、長寬比與針對中斷點的重排。窄螢幕上應允許目前頁面垂直捲動，不要將文字縮小到無法閱讀。
 
-## Design system
+## 設計系統
 
-Map YAML tokens to CSS custom properties:
+將 YAML token 對應到 CSS 自訂屬性：
 
 ```css
 :root {
@@ -26,36 +26,36 @@ Map YAML tokens to CSS custom properties:
 }
 ```
 
-Do not force one global theme. Preserve the requested palette, material, rounded typography, title anchor, card language, and recurring motif.
+不得強制使用單一全域主題。保留使用者要求的色盤、材質、圓體字型、標題錨點、卡片語言與重複視覺母題。
 
-## Controlled components
+## 受控元件
 
-- `cover_hero`: hero asset plus live CTA/navigation.
-- `question_focus`: one question and optional progressive reveal.
-- `comparison_split`: two live panels with toggle or sortable evidence.
-- `process_timeline`: clickable stepper with current-step explanation.
-- `classification_grid`: filterable or selectable cards.
-- `relationship_map`: HTML nodes plus SVG connector layer.
-- `case_scene_analysis`: supporting image plus tabbed interpretation.
-- `data_focus`: SVG/Canvas/chart with declared controls and text summary.
-- `summary_three`: three selectable takeaways.
-- `action_next_step`: decision or CTA with visible result.
+- `cover_hero`：主視覺素材加上即時行動呼籲／導覽。
+- `question_focus`：一個問題與選用的漸進揭露。
+- `comparison_split`：兩個即時面板，搭配切換或可排序證據。
+- `process_timeline`：可點擊的步驟導覽，並顯示目前步驟說明。
+- `classification_grid`：可篩選或選取的卡片。
+- `relationship_map`：HTML 節點加上 SVG 連接線圖層。
+- `case_scene_analysis`：輔助圖片加上分頁式解讀。
+- `data_focus`：SVG／Canvas／圖表，搭配已宣告的控制項與文字摘要。
+- `summary_three`：三個可選取的帶走重點。
+- `action_next_step`：顯示結果的決策或行動呼籲。
 
-## Navigation
+## 導覽
 
-Support ArrowRight, Space, PageDown, ArrowLeft, PageUp, Home, End, and `F` for fullscreen. Provide visible previous/next buttons. Do not trigger slide navigation when a control, link, table header, form input, or interactive card is used.
+支援 ArrowRight、Space、PageDown、ArrowLeft、PageUp、Home、End，以及用 `F` 進入全螢幕。提供可見的上一頁／下一頁按鈕。操作控制項、連結、表格標題、表單輸入或互動卡片時，不得觸發投影片導覽。
 
-Update progress, section label, page number, focus target, and URL hash on every page change. Bind explicit DOM references; do not depend on browser-generated globals from element IDs.
+每次切換頁面都要更新進度、階段標籤、頁碼、焦點目標與 URL hash。明確綁定 DOM 參照；不得依賴瀏覽器從元素 ID 自動產生的全域變數。
 
-## Accessibility and motion
+## 無障礙與動態效果
 
-- Use semantic buttons and focus-visible styles.
-- Add an `aria-live="polite"` status region for page and interaction results.
-- Ensure every pointer interaction has keyboard activation.
-- Never hide essential content behind hover.
-- Implement `@media (prefers-reduced-motion: reduce)`.
-- Give images useful alt text, or empty alt text when decorative.
+- 使用語意化按鈕與焦點可見樣式。
+- 為頁面與互動結果加入 `aria-live="polite"` 狀態區域。
+- 每個指標裝置互動都必須提供鍵盤操作方式。
+- 絕不能將必要內容藏在滑鼠懸停後方。
+- 實作 `@media (prefers-reduced-motion: reduce)`。
+- 圖片提供有意義的替代文字；純裝飾圖片則使用空白替代文字。
 
-## Asset policy
+## 素材政策
 
-Use AI-generated or user-provided images as hero or supporting assets. Keep exact copy, formulas, tables, diagrams, and interaction labels live. Embed final images as data URIs for a portable single file.
+使用 AI 生成或使用者提供的圖片作為主視覺或輔助素材。精確文案、公式、表格、圖解與互動標籤應保持即時可操作。最終圖片需嵌入為 data URI，以形成可攜式單一檔案。

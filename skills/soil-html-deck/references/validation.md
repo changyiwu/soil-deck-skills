@@ -1,14 +1,14 @@
-# SOIL HTML Validation
+# SOIL HTML 驗證
 
-Validate in this order:
+依下列順序驗證：
 
-1. YAML schema, page sequence, SOIL phases, rounded typography, layout IDs, semantic/interaction compatibility, and minimum meaningful interactions.
-2. Golden trio: cover, standard content page, and representative interaction page.
-3. Final HTML structure: exact slide count, sequential `data-slide`, declared `data-interaction`, live text, and no image-slideshow substitution.
-4. Portability: every `<img>` is a data URI; strict-offline builds have no remote scripts, styles, fonts, or images.
-5. Navigation: keyboard, visible controls, progress, phase label, page label, focus, and hash state.
-6. Interaction: initial state, all controls, result feedback, reset/revisit behavior, and static fallback.
-7. Responsive QA: common desktop viewport plus narrow viewport; no clipped titles, unreachable controls, or unreadable text.
-8. Accessibility: semantic controls, alt text, focus-visible, `aria-live`, keyboard parity, and reduced motion.
+1. YAML 結構、頁面順序、SOIL 階段、圓體字型、版型 ID、語意／互動相容性，以及有意義互動的最低數量。
+2. 黃金三頁：封面、標準內容頁與代表性互動頁。
+3. 最終 HTML 結構：精確投影片數量、連續的 `data-slide`、已宣告的 `data-interaction`、即時文字，以及未用圖片輪播取代內容。
+4. 可攜性：每個 `<img>` 都是 data URI；嚴格離線版本不得含有遠端程式、樣式、字型或圖片。
+5. 導覽：鍵盤、可見控制項、進度、階段標籤、頁碼標籤、焦點與 hash 狀態。
+6. 互動：初始狀態、所有控制項、結果回饋、重設／再次造訪行為，以及靜態備援。
+7. 響應式品質檢查：常見桌面視窗與窄螢幕視窗；不得出現標題裁切、控制項無法操作或文字難以閱讀。
+8. 無障礙：語意化控制項、替代文字、焦點可見樣式、`aria-live`、鍵盤等價操作與減少動態效果。
 
-Reject decorative interaction, hover-only teaching content, baked body text, relative final asset paths, undefined DOM globals, external dependencies in strict-offline mode, and interactions whose meaning disappears without animation.
+以下情況一律不接受：裝飾性互動、只能用滑鼠懸停取得的教學內容、baked 正文文字、最終素材使用相對路徑、未定義的 DOM 全域變數、嚴格離線模式存在外部依賴，以及移除動畫後便失去意義的互動。

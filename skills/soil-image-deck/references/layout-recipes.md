@@ -1,19 +1,18 @@
-# SOIL Controlled Layouts
+# SOIL 受控版型
 
-| Teaching job | Layout ID | Budget |
+| 教學任務 | 版型 ID | 內容上限 |
 |---|---|---|
-| 封面 | `cover_hero` | One title, one visual idea |
-| 問題引入 | `question_focus` | One large question |
-| 迷思澄清 | `misconception_dual` | Two sides |
-| 比較 | `comparison_split` | Two options |
-| 流程 | `process_timeline` | Three to five steps |
-| 分類 | `classification_grid` | Four or six groups |
-| 案例 | `case_scene_analysis` | Scenario plus interpretation |
-| 關係 | `relationship_map` | Hierarchy or causal chain |
-| 數據 | `data_focus` | One number or chart |
-| 總結 | `summary_three` | Three takeaways |
-| 行動 | `action_next_step` | One next step |
-| 過渡 | `section_divider` | One line, full bleed |
+| 封面 | `cover_hero` | 一個標題、一個視覺概念 |
+| 問題引入 | `question_focus` | 一個大型問題 |
+| 迷思澄清 | `misconception_dual` | 兩個面向 |
+| 比較 | `comparison_split` | 兩個選項 |
+| 流程 | `process_timeline` | 三至五個步驟 |
+| 分類 | `classification_grid` | 四或六組 |
+| 案例 | `case_scene_analysis` | 情境加上解讀 |
+| 關係 | `relationship_map` | 階層或因果鏈 |
+| 數據 | `data_focus` | 一個數字或一張圖表 |
+| 總結 | `summary_three` | 三個帶走重點 |
+| 行動 | `action_next_step` | 一個下一步 |
+| 過渡 | `section_divider` | 一行文字、滿版出血 |
 
-Do not repeat one layout more than twice in a row. Alternate visual weight while preserving title anchor, palette, rounded typography, material, and recurring motif.
-
+同一版型不得連續使用超過兩次。在保留標題錨點、色盤、圓體字型、材質與重複視覺母題的前提下，交替調整視覺重量。
