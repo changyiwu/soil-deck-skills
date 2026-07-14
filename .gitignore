@@ -9,6 +9,20 @@ __pycache__/
 *.pyc
 .venv/
 
+# 本機代理設定
+.agents/
+.codex/
+.claude/
+
+# 相依套件 / 建置輸出
+node_modules/
+dist/
+build/
+coverage/
+
+# 產出檔案
+output/
+
 # 敏感資料
 .env
 *.key

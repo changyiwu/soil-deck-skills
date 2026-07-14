@@ -18,7 +18,7 @@ description: >
 以李俊儀教授的 SOIL 教學心法為基礎的教學簡報工作流。
 六顆引擎、一條清楚的路徑：先想清楚教什麼，再安排怎麼教，最後才處理怎麼呈現。
 
-> 完整理論參考：讀取 [references/soil-theory.md](references/soil-theory.md)
+> 完整理論參考：讀取 [李俊儀-SOIL.md](C:/Users/chang/我的雲端硬碟/2ndbrain/Clippings/李俊儀-SOIL.md)
 
 ---
 

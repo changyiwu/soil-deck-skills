@@ -64,3 +64,11 @@ python "$HOME\.codex\skills\.system\skill-installer\scripts\install-skill-from-g
 - 系統沒有繁中粗圓字型時，停止並提示安裝，不默默替換成稜角黑體。
 
 MIT License，詳見 [LICENSE](LICENSE)。
+
+## 專案維護
+
+- 專案工作規則請先閱讀 [`AGENTS.md`](AGENTS.md)。
+- 可寫入的 GitHub 遠端是 [changyiwu/soil-deck-skills](https://github.com/changyiwu/soil-deck-skills)，原始專案保留為 `upstream`。
+- 本機生成、預覽與驗證產物統一放在 `output/`，不納入 Git。
+- 專案未連結 Firebase，也未啟用 GitHub Pages 或其他部署。
+- 第二大腦的專案駕駛艙位於 `C:\Users\chang\我的雲端硬碟\2ndbrain\soil-deck-skills-專案駕駛艙.md`。
