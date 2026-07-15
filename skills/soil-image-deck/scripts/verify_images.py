@@ -20,6 +20,13 @@ def main():
     folder = Path(args.images_dir)
     errors = []
 
+    ratio_text = str((spec.get("canvas") or {}).get("target_ratio", "16:9"))
+    try:
+        ratio_width, ratio_height = (float(part) for part in ratio_text.split(":", 1))
+        target_ratio = ratio_width / ratio_height
+    except (TypeError, ValueError, ZeroDivisionError):
+        raise SystemExit(f"Invalid canvas.target_ratio: {ratio_text}")
+
     for slide in spec.get("slides", []):
         expected = Path(slide["output"]).name
         path = folder / expected
@@ -28,8 +35,8 @@ def main():
             continue
         with Image.open(path) as image:
             ratio = image.width / image.height
-            if abs(ratio - 16 / 9) > args.ratio_tolerance:
-                errors.append(f"{expected}: ratio {ratio:.4f} is not 16:9")
+            if abs(ratio - target_ratio) > args.ratio_tolerance:
+                errors.append(f"{expected}: ratio {ratio:.4f} is not {ratio_text}")
             print(f"{expected}: {image.width}x{image.height} ratio={ratio:.4f}")
 
     if errors:
@@ -43,4 +50,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-

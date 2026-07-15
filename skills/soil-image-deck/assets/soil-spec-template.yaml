@@ -34,6 +34,11 @@ design_system:
       - "jf open 粉圓 2.1"
       - "GenSenRounded TW"
       - "GenJyuuGothic"
+    plate_font_fallback_policy: "warn_and_fallback"
+    fallback_font_preferences:
+      - "Microsoft JhengHei"
+      - "Noto Sans CJK TC"
+      - "Noto Sans TC"
   style_reference: "slides/images/page_02.png"
   negative_prompt:
     - "不要 Logo 或浮水印"
@@ -89,4 +94,3 @@ validation:
     - "文字錯誤"
     - "字體不夠粗圓"
     - "教學任務或版型不清楚"
-

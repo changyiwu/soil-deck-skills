@@ -33,3 +33,17 @@ validation: {}
 ```
 
 圖片提示詞使用百分比區域。只有 `plate` 疊字區塊能使用 PowerPoint 座標。
+
+`plate` 模式可在單頁加入選用的渲染區塊：
+
+```yaml
+plate:
+  image: "page_01"
+  image_box: {x: 0, y: 0, w: 13.333, h: 7.5, no_crop: false}
+  blocks:
+    - {type: title, source: visible_text.title, x: 0.75, y: 0.55, w: 11.8, h: 1.15}
+```
+
+若省略 `plate.blocks`，可攜式封裝器會依 `visible_text.title`、`subtitle`、`labels`、`items`、`bullets` 與 `body` 建立保守的預設文字框。需要精確版面時，明確提供 `plate.blocks`。
+
+`design_system.typography` 可設定 `plate_font_fallback_policy: "warn_and_fallback"`（預設）與 `fallback_font_preferences`。找不到指定圓體時，封裝器只會在輸出記錄明確警告後使用該清單中已安裝的可讀繁中字型；設定 `strict` 則維持停止封裝。

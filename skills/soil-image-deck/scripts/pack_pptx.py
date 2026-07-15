@@ -61,6 +61,13 @@ ROUNDED_FONT_CANDIDATES = [
     "GenJyuuGothic",
     "源柔ゴシック",
 ]
+READABLE_CJK_FALLBACK_CANDIDATES = [
+    "Microsoft JhengHei",
+    "Microsoft JhengHei UI",
+    "Noto Sans CJK TC",
+    "Noto Sans TC",
+    "PingFang TC",
+]
 
 
 def _installed_font_names() -> set[str]:
@@ -80,7 +87,8 @@ def _installed_font_names() -> set[str]:
                                 display_name, _, _ = winreg.EnumValue(key, index)
                             except OSError:
                                 break
-                            names.add(display_name.replace(" (TrueType)", "").strip())
+                            display_name = display_name.replace(" (TrueType)", "").strip()
+                            names.update(part.strip() for part in display_name.split(" & ") if part.strip())
                             index += 1
                 except OSError:
                     continue
@@ -105,9 +113,9 @@ def _norm_font(value: str) -> str:
     return "".join(value.casefold().split())
 
 
-def resolve_rounded_font(style_cfg: dict) -> str:
-    """Choose an installed rounded CJK font; never silently use an angular fallback."""
-    requested = style_cfg.get("font_preferences") or []
+def resolve_rounded_font(style_cfg: dict) -> tuple[str, bool]:
+    """Choose a preferred rounded font, or a documented readable CJK fallback."""
+    requested = style_cfg.get("plate_font_preferences") or style_cfg.get("font_preferences") or []
     if isinstance(requested, str):
         requested = [requested]
     candidates = list(dict.fromkeys([*requested, *ROUNDED_FONT_CANDIDATES]))
@@ -116,14 +124,38 @@ def resolve_rounded_font(style_cfg: dict) -> str:
     for candidate in candidates:
         normalized = _norm_font(candidate)
         if normalized in installed_by_norm:
-            return installed_by_norm[normalized]
+            return installed_by_norm[normalized], False
         for installed_norm, installed_name in installed_by_norm.items():
             if normalized in installed_norm or installed_norm in normalized:
-                return installed_name
+                return installed_name, False
+
+    policy = style_cfg.get("plate_font_fallback_policy", "warn_and_fallback")
+    if policy not in {"warn_and_fallback", "strict"}:
+        raise SystemExit("plate_font_fallback_policy 必須是 warn_and_fallback 或 strict")
+    if policy == "warn_and_fallback":
+        fallback_requested = style_cfg.get("fallback_font_preferences") or READABLE_CJK_FALLBACK_CANDIDATES
+        if isinstance(fallback_requested, str):
+            fallback_requested = [fallback_requested]
+        for candidate in fallback_requested:
+            normalized = _norm_font(candidate)
+            if normalized in installed_by_norm:
+                font = installed_by_norm[normalized]
+            else:
+                font = next(
+                    (name for installed_norm, name in installed_by_norm.items()
+                     if normalized in installed_norm or installed_norm in normalized),
+                    None,
+                )
+            if font:
+                print(
+                    "[WARN] 找不到指定的繁中粗圓字型；"
+                    f"改用備援字型「{font}」。字型風格可能不同。"
+                )
+                return font, True
     raise SystemExit(
-        "plate 模式需要繁體中文粗圓字型。請先安裝以下任一字型："
+        "plate 模式找不到可用的繁體中文字型。請先安裝以下任一圓體字型："
         + "、".join(ROUNDED_FONT_CANDIDATES[:3])
-        + "。為避免稜角字體，本技能不會默默替換成 Microsoft JhengHei。"
+        + "；或在 YAML 的 fallback_font_preferences 指定已安裝的可讀字型。"
     )
 
 
@@ -133,8 +165,74 @@ def hex_to_rgb(h: str) -> RGBColor:
 
 
 def find_latest(images_dir: Path, prefix: str) -> str | None:
+    exact = images_dir / f"{prefix}.png"
+    if exact.is_file():
+        return str(exact)
     cands = sorted(glob.glob(str(images_dir / f"{prefix}_*.png")))
     return cands[-1] if cands else None
+
+
+def _visible_text_blocks(slide_def: dict) -> list[dict]:
+    """Create conservative editable text blocks when plate.blocks is omitted."""
+    visible = slide_def.get("visible_text") or {}
+    if not isinstance(visible, dict):
+        return []
+    blocks = []
+    title = visible.get("title")
+    if title:
+        blocks.append({
+            "type": "title", "text": str(title),
+            "x": 0.75, "y": 0.55, "w": 11.8, "h": 1.15,
+        })
+    subtitle = visible.get("subtitle")
+    if subtitle:
+        blocks.append({
+            "type": "subtitle", "text": str(subtitle),
+            "x": 0.8, "y": 1.75, "w": 11.6, "h": 0.7,
+        })
+    items = visible.get("labels") or visible.get("items") or visible.get("bullets")
+    if isinstance(items, list) and items:
+        blocks.append({
+            "type": "body", "text": "\n".join(f"• {item}" for item in items),
+            "x": 0.9, "y": 2.55, "w": 5.8, "h": 3.8,
+        })
+    body = visible.get("body")
+    if body:
+        blocks.append({
+            "type": "body", "text": str(body),
+            "x": 0.9, "y": 2.55, "w": 5.8, "h": 3.8,
+        })
+    return blocks
+
+
+def _resolve_block_text(block: dict, slide_def: dict) -> dict:
+    """Resolve a dotted source such as visible_text.title into block.text."""
+    resolved = dict(block)
+    source = resolved.pop("source", None)
+    if source and not resolved.get("text"):
+        value = slide_def
+        for part in str(source).split("."):
+            if not isinstance(value, dict):
+                value = None
+                break
+            value = value.get(part)
+        if isinstance(value, list):
+            value = "\n".join(str(item) for item in value)
+        resolved["text"] = "" if value is None else str(value)
+    return resolved
+
+
+def load_plate_spec(spec_path: Path) -> tuple[dict, dict, list[dict]]:
+    spec = yaml.safe_load(spec_path.read_text(encoding="utf-8"))
+    if not isinstance(spec, dict) or spec.get("schema_version") != "soil_image_deck_v2":
+        raise SystemExit("plate 模式需要 schema_version=soil_image_deck_v2")
+    design_system = spec.get("design_system")
+    slides = spec.get("slides")
+    if not isinstance(design_system, dict):
+        raise SystemExit("spec.yaml 缺少 design_system mapping")
+    if not isinstance(slides, list) or not slides:
+        raise SystemExit("spec.yaml 沒有 slides 欄位")
+    return spec, design_system, slides
 
 
 def _resolve_color(name_or_hex: str, palette: dict) -> RGBColor:
@@ -289,7 +387,7 @@ def pack_baked(images_dir: Path, output: Path):
 
     by_page = {}
     for p in pngs:
-        prefix = "_".join(Path(p).name.split("_")[:2])
+        prefix = "_".join(Path(p).stem.split("_")[:2])
         by_page[prefix] = p
 
     for prefix in sorted(by_page.keys()):
@@ -305,30 +403,28 @@ def pack_baked(images_dir: Path, output: Path):
 
 
 def pack_plate(images_dir: Path, output: Path, spec_path: Path):
-    spec = yaml.safe_load(spec_path.read_text(encoding="utf-8"))
+    _, design_system, slides = load_plate_spec(spec_path)
 
-    palette = {**DEFAULT_PALETTE, **(spec.get("style", {}).get("palette", {}))}
-    style_cfg = spec.get("style", {})
-    default_font = resolve_rounded_font(style_cfg)
-    title_font = style_cfg.get("title_font") or default_font
-    body_font = style_cfg.get("body_font") or default_font
+    palette = {**DEFAULT_PALETTE, **(design_system.get("palette") or {})}
+    typography = design_system.get("typography") or {}
+    default_font, used_fallback_font = resolve_rounded_font(typography)
+    title_font = typography.get("title_font") or default_font
+    body_font = typography.get("body_font") or default_font
 
     prs = Presentation()
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
     blank = prs.slide_layouts[6]
 
-    pages = spec.get("pages", [])
-    if not pages:
-        raise SystemExit("spec.yaml 沒有 pages 欄位")
-
-    for page_def in pages:
+    for page_def in slides:
         slide = prs.slides.add_slide(blank)
-        img_prefix = page_def.get("image")  # e.g. page_01
+        output_name = Path(str(page_def.get("output", ""))).stem
+        plate_cfg = page_def.get("plate") or {}
+        img_prefix = plate_cfg.get("image") or output_name
         img_path = find_latest(images_dir, img_prefix) if img_prefix else None
 
         # 全背景色底（保險用，底圖若透明或未對齊也看得乾淨）
-        bg_name = page_def.get("bg") or "bg"
+        bg_name = plate_cfg.get("bg") or "background"
         bg_shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, prs.slide_width, prs.slide_height)
         bg_shape.fill.solid()
         bg_shape.fill.fore_color.rgb = _resolve_color(bg_name, palette)
@@ -336,24 +432,27 @@ def pack_plate(images_dir: Path, output: Path, spec_path: Path):
 
         # 底圖（自動依目標 slot 比例裁切，避免變形）
         if img_path:
-            img_w = float(page_def.get("img_w", 13.333))
-            img_h = float(page_def.get("img_h", 7.5))
-            ix = Inches(float(page_def.get("img_x", 0)))
-            iy = Inches(float(page_def.get("img_y", 0)))
-            # 若 page_def 明確指定 no_crop: true，則保留原圖
-            if not page_def.get("no_crop"):
+            image_box = plate_cfg.get("image_box") or {}
+            img_w = float(image_box.get("w", 13.333))
+            img_h = float(image_box.get("h", 7.5))
+            ix = Inches(float(image_box.get("x", 0)))
+            iy = Inches(float(image_box.get("y", 0)))
+            if not image_box.get("no_crop"):
                 img_path = crop_to_ratio(img_path, img_w, img_h, images_dir)
             slide.shapes.add_picture(img_path, ix, iy, Inches(img_w), Inches(img_h))
 
         # 文字層
-        for block in page_def.get("blocks", []):
-            add_textbox(slide, block, palette, default_font, title_font, body_font)
+        blocks = plate_cfg.get("blocks") or _visible_text_blocks(page_def)
+        for block in blocks:
+            resolved = _resolve_block_text(block, page_def)
+            add_textbox(slide, resolved, palette, default_font, title_font, body_font)
 
-        print(f"  [plate] page {page_def.get('page')}  img={img_prefix}  blocks={len(page_def.get('blocks', []))}")
+        print(f"  [plate] page {page_def.get('page')}  img={img_prefix}  blocks={len(blocks)}")
 
     output.parent.mkdir(parents=True, exist_ok=True)
     prs.save(output)
-    print(f"[OK] {output.resolve()}  ({len(pages)} 頁)")
+    suffix = "（已套用字型備援）" if used_fallback_font else ""
+    print(f"[OK] {output.resolve()}  ({len(slides)} 頁){suffix}")
 
 
 def main():
@@ -363,6 +462,7 @@ def main():
     p.add_argument("--mode", choices=["baked", "plate"], default="baked",
                    help="baked=圖內含文字；plate=底圖+可編輯文字框")
     p.add_argument("--spec", default=None, help="plate 模式的 YAML 規格檔")
+    p.add_argument("--check-spec", action="store_true", help="只檢查 v2 plate 規格，不產生 PPTX")
     args = p.parse_args()
 
     images_dir = Path(args.images_dir)
@@ -373,6 +473,10 @@ def main():
     else:
         if not args.spec:
             raise SystemExit("plate 模式需要 --spec <spec.yaml>")
+        if args.check_spec:
+            _, _, slides = load_plate_spec(Path(args.spec))
+            print(f"VALID PLATE SPEC: {args.spec} ({len(slides)} 頁)")
+            return
         pack_plate(images_dir, output, Path(args.spec))
 
 

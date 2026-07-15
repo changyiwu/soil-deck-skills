@@ -68,6 +68,28 @@ def main():
     if data.get("schema_version") != "soil_interactive_deck_v1":
         errors.append("schema_version must be soil_interactive_deck_v1")
 
+    sections = {}
+    for key in ("deck", "canvas", "soil_flow", "design_system", "layout_router", "interaction_router", "validation"):
+        value = data.get(key)
+        if not isinstance(value, dict):
+            errors.append(f"{key} must be a mapping")
+            value = {}
+        sections[key] = value
+
+    deck = sections["deck"]
+    if deck.get("portability") not in {"single_file", "linked"}:
+        errors.append("deck.portability must be single_file or linked")
+    ratio = sections["canvas"].get("target_ratio")
+    if not isinstance(ratio, str) or ":" not in ratio:
+        errors.append("canvas.target_ratio must use W:H format")
+    else:
+        try:
+            ratio_width, ratio_height = (float(part) for part in ratio.split(":", 1))
+            if ratio_width <= 0 or ratio_height <= 0:
+                raise ValueError
+        except ValueError:
+            errors.append("canvas.target_ratio must contain positive numbers")
+
     slides = data.get("slides")
     if not isinstance(slides, list) or not slides:
         return fail(errors + ["slides must be a non-empty list"], warnings)
@@ -88,7 +110,10 @@ def main():
                 errors.append(f"{where}: missing {key}")
 
         page = slide.get("page")
-        pages.append(page)
+        if not isinstance(page, int) or isinstance(page, bool):
+            errors.append(f"{where}: page must be an integer")
+        else:
+            pages.append(page)
         if slide.get("soil_phase") not in PHASES:
             errors.append(f"{where}: invalid soil_phase")
 
@@ -133,7 +158,7 @@ def main():
     if pages != list(range(1, len(slides) + 1)):
         errors.append("slides: page numbers must be sequential from 1")
 
-    expected = (data.get("deck") or {}).get("slide_count")
+    expected = deck.get("slide_count")
     if expected != len(slides):
         errors.append(f"deck.slide_count={expected}, but slides has {len(slides)} entries")
 
@@ -141,13 +166,20 @@ def main():
     if phases != PHASES:
         errors.append("slides must include hook, attention, and action phases")
 
-    min_interactive = (data.get("interaction_router") or {}).get("min_interactive_slides", 0)
+    min_interactive = sections["interaction_router"].get("min_interactive_slides", 0)
+    if not isinstance(min_interactive, int) or min_interactive < 0:
+        errors.append("interaction_router.min_interactive_slides must be a non-negative integer")
+        min_interactive = 0
     if interactive_count < min_interactive:
         errors.append(
             f"interactive slides={interactive_count}, below required minimum {min_interactive}"
         )
 
-    font_feel = (((data.get("design_system") or {}).get("typography") or {}).get("font_feel", ""))
+    typography = sections["design_system"].get("typography")
+    if not isinstance(typography, dict):
+        errors.append("design_system.typography must be a mapping")
+        typography = {}
+    font_feel = typography.get("font_feel", "")
     if not any(token in str(font_feel).lower() for token in ("圓", "round")):
         errors.append("design_system.typography.font_feel must require rounded typography")
 

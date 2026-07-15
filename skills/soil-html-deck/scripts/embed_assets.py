@@ -23,13 +23,23 @@ def asset_uri(path: Path, max_width: int, quality: int) -> str:
         return raw_data_uri(path)
 
     with Image.open(path) as image:
-        image = image.convert("RGB")
+        if getattr(image, "is_animated", False):
+            return raw_data_uri(path)
         if max_width and image.width > max_width:
             height = round(image.height * max_width / image.width)
             image = image.resize((max_width, height), Image.Resampling.LANCZOS)
         buffer = io.BytesIO()
-        image.save(buffer, format="JPEG", quality=quality, optimize=True)
-    return "data:image/jpeg;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
+        suffix = path.suffix.lower()
+        if suffix == ".png" or "A" in image.getbands():
+            image.save(buffer, format="PNG", optimize=True)
+            mime = "image/png"
+        elif suffix == ".webp":
+            image.save(buffer, format="WEBP", quality=quality, method=6)
+            mime = "image/webp"
+        else:
+            image.convert("RGB").save(buffer, format="JPEG", quality=quality, optimize=True)
+            mime = "image/jpeg"
+    return f"data:{mime};base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
 
 
 def main():

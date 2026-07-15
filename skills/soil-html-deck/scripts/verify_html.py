@@ -18,26 +18,45 @@ class DeckParser(HTMLParser):
         self.images = []
         self.ids = []
         self.links = []
+        self.resource_links = []
+        self.viewport = False
+        self.aria_live = False
         self._current_slide = None
 
     def handle_starttag(self, tag, attrs):
         attr = dict(attrs)
+        if tag == "meta" and attr.get("name", "").lower() == "viewport":
+            self.viewport = True
+        if attr.get("aria-live") == "polite":
+            self.aria_live = True
         if "id" in attr:
             self.ids.append(attr["id"])
         if tag == "section" and "slide" in attr.get("class", "").split():
             self._current_slide = {
                 "page": attr.get("data-slide"),
                 "interaction": attr.get("data-interaction"),
-                "buttons": 0,
+                "controls": 0,
             }
             self.slides.append(self._current_slide)
-        if tag == "button" and self._current_slide:
-            self._current_slide["buttons"] += 1
+        interactive_roles = {"button", "tab", "slider", "switch", "checkbox", "radio"}
+        is_control = (
+            tag in {"button", "input", "select", "textarea"}
+            or attr.get("role") in interactive_roles
+            or ("tabindex" in attr and attr.get("tabindex") != "-1")
+        )
+        if is_control and self._current_slide:
+            self._current_slide["controls"] += 1
         if tag == "img":
             self.images.append(attr.get("src", ""))
-        for key in ("src", "href"):
+        for key in ("src", "href", "poster", "data"):
             if key in attr:
                 self.links.append((tag, key, attr[key]))
+                if (tag, key) in {
+                    ("script", "src"), ("link", "href"), ("source", "src"),
+                    ("video", "src"), ("video", "poster"), ("audio", "src"),
+                    ("iframe", "src"), ("object", "data"), ("embed", "src"),
+                }:
+                    self.resource_links.append((tag, key, attr[key]))
 
     def handle_endtag(self, tag):
         if tag == "section":
@@ -78,8 +97,8 @@ def main():
             errors.append(
                 f"slide {page}: data-interaction={slide.get('interaction')}, expected {expected_type}"
             )
-        if expected_type != "none" and slide.get("buttons", 0) == 0:
-            errors.append(f"slide {page}: interactive slide has no button controls")
+        if expected_type != "none" and slide.get("controls", 0) == 0:
+            errors.append(f"slide {page}: interactive slide has no keyboard-focusable controls")
 
     for index, src in enumerate(parsed.images, 1):
         if not src.startswith("data:image/"):
@@ -89,23 +108,27 @@ def main():
         errors.append("HTML contains duplicate ids")
 
     if args.strict_offline:
-        for tag, key, value in parsed.links:
-            if value.startswith(("http://", "https://", "//", "file://")):
-                errors.append(f"strict offline: external {tag} {key}={value[:80]}")
-        if re.search(r"url\(\s*['\"]?https?://", html, re.IGNORECASE):
-            errors.append("strict offline: external CSS url()")
+        for tag, key, value in parsed.resource_links:
+            if value and not value.startswith(("data:", "#")):
+                errors.append(f"strict offline: linked resource {tag} {key}={value[:80]}")
+        for match in re.finditer(r"url\(\s*(['\"]?)(.*?)\1\s*\)", html, re.IGNORECASE):
+            value = match.group(2).strip()
+            if value and not value.startswith(("data:", "#")):
+                errors.append(f"strict offline: linked CSS url()={value[:80]}")
+        if re.search(r"@import\b|\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(", html, re.IGNORECASE):
+            errors.append("strict offline: runtime network dependency detected")
 
-    required_tokens = {
-        "viewport meta": 'name="viewport"',
-        "progress": 'id="progress"',
-        "section label": 'id="section-tag"',
-        "page label": 'id="page-info"',
-        "aria live": 'aria-live="polite"',
-        "keyboard navigation": "keydown",
-        "reduced motion": "prefers-reduced-motion",
+    required_checks = {
+        "viewport meta": parsed.viewport,
+        "progress": "progress" in parsed.ids,
+        "section label": "section-tag" in parsed.ids,
+        "page label": "page-info" in parsed.ids,
+        "aria live": parsed.aria_live,
+        "keyboard navigation": "keydown" in html,
+        "reduced motion": "prefers-reduced-motion" in html,
     }
-    for label, token in required_tokens.items():
-        if token not in html:
+    for label, present in required_checks.items():
+        if not present:
             errors.append(f"missing {label}")
 
     if errors:

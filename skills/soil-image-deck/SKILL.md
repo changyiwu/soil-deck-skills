@@ -31,7 +31,7 @@ description: 建立 SOIL 風格、以圖片為核心的教學簡報，每張投�
 
 使用 `baked` 時，每則圖片提示詞都要重申圓體字型要求，並禁止尖角幾何中文字、窄長機械字、尖銳楔形與科技模板字。
 
-使用 `plate` 時，依序採用系統已安裝的 `jf open 粉圓 2.1`、`GenSenRounded TW` 或 `GenJyuuGothic`。若都未安裝，必須在封裝前停止並回報缺少圓體中文字型，絕不能無聲改用尖角的預設字型。
+使用 `plate` 時，依序採用系統已安裝的 `jf open 粉圓 2.1`、`GenSenRounded TW` 或 `GenJyuuGothic`。若都未安裝，預設改用 YAML `fallback_font_preferences` 中已安裝的可讀繁中字型，並在輸出記錄明確警告字型風格差異；將 `plate_font_fallback_policy` 設為 `strict` 時才停止封裝。
 
 ## SOIL 六引擎工作流
 
@@ -49,18 +49,18 @@ description: 建立 SOIL 風格、以圖片為核心的教學簡報，每張投�
 驗證 YAML：
 
 ```powershell
-python .\scripts\validate_spec.py --spec .\spec.yaml
+python "<soil-image-deck-dir>\scripts\validate_spec.py" --spec .\spec.yaml
 ```
 
 驗證生成圖片：
 
 ```powershell
-python .\scripts\verify_images.py --spec .\spec.yaml --images-dir .\slides\images
+python "<soil-image-deck-dir>\scripts\verify_images.py" --spec .\spec.yaml --images-dir .\slides\images
 ```
 
 在 Codex 中，使用 Presentations skill 與 Artifact Tool 封裝。每張投影片嵌入一張滿版圖片，渲染匯出的 PPTX、檢查蒙太奇總覽，並執行溢位檢查。
 
-若環境沒有 Artifact Tool，可使用 `scripts/pack_pptx.py` 作為可攜式備援方案。它會將 baked 圖片置中裁切成 16:9；在 `plate` 模式下若找不到圓體中文字型，則拒絕無聲替換字型。
+若環境沒有 Artifact Tool，可使用 `scripts/pack_pptx.py` 作為可攜式備援方案。它會將 baked 圖片置中裁切成 16:9；在 `plate` 模式下優先使用圓體，必要時採用已宣告的可讀字型備援並顯示警告。
 
 ## 輸出模式
 

@@ -1,20 +1,18 @@
-name: Validate soil-html-deck
+name: Validate soil-teaching-deck
 
 on:
   push:
     paths:
-      - "skills/soil-html-deck/**"
-      - "skills/soil-image-deck/references/soil-deck-core.md"
+      - "skills/soil-teaching-deck/**"
       - "scripts/validate_all.py"
       - "requirements-dev.txt"
-      - ".github/workflows/validate-soil-html-deck.yml"
+      - ".github/workflows/validate-soil-teaching-deck.yml"
   pull_request:
     paths:
-      - "skills/soil-html-deck/**"
-      - "skills/soil-image-deck/references/soil-deck-core.md"
+      - "skills/soil-teaching-deck/**"
       - "scripts/validate_all.py"
       - "requirements-dev.txt"
-      - ".github/workflows/validate-soil-html-deck.yml"
+      - ".github/workflows/validate-soil-teaching-deck.yml"
 
 jobs:
   validate:
@@ -25,4 +23,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -r requirements-dev.txt
-      - run: python scripts/validate_all.py --target html
+      - run: python scripts/validate_all.py --target teaching

@@ -39,7 +39,7 @@
 
 ```powershell
 python "$HOME\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" `
-  --repo mathruffian-dot/soil-deck-skills `
+  --repo changyiwu/soil-deck-skills `
   --path skills/soil-image-deck
 ```
 
@@ -47,9 +47,11 @@ python "$HOME\.codex\skills\.system\skill-installer\scripts\install-skill-from-g
 
 ```powershell
 python "$HOME\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" `
-  --repo mathruffian-dot/soil-deck-skills `
+  --repo changyiwu/soil-deck-skills `
   --path skills/soil-image-deck skills/soil-teaching-deck skills/soil-html-deck
 ```
+
+以上安裝繁體中文維護版；原始上游版本位於 `mathruffian-dot/soil-deck-skills`。
 
 ## 生圖路徑
 
@@ -61,9 +63,18 @@ python "$HOME\.codex\skills\.system\skill-installer\scripts\install-skill-from-g
 
 - `baked`：每次提示詞都要求繁體中文粗圓字，禁止尖角、窄長、機械感字型。
 - `plate`：優先使用 `jf open 粉圓 2.1`、`GenSenRounded TW`、`GenJyuuGothic`。
-- 系統沒有繁中粗圓字型時，停止並提示安裝，不默默替換成稜角黑體。
+- 系統沒有繁中粗圓字型時，預設改用 YAML 宣告的可讀字型備援（如 `Microsoft JhengHei`），並在輸出記錄警告風格差異；需要嚴格風格一致性時，設定 `plate_font_fallback_policy: strict`。
 
 MIT License，詳見 [LICENSE](LICENSE)。
+
+## 本機驗證
+
+```powershell
+python -m pip install -r requirements-dev.txt
+python .\scripts\validate_all.py
+```
+
+驗證會檢查三套 Skill metadata、YAML、Python 語法、Markdown 連結、Image Deck 封裝 smoke test，以及 HTML 嵌入與嚴格離線 smoke test。
 
 ## 專案維護
 
@@ -71,4 +82,7 @@ MIT License，詳見 [LICENSE](LICENSE)。
 - 可寫入的 GitHub 遠端是 [changyiwu/soil-deck-skills](https://github.com/changyiwu/soil-deck-skills)，原始專案保留為 `upstream`。
 - 本機生成、預覽與驗證產物統一放在 `output/`，不納入 Git。
 - 專案未連結 Firebase，也未啟用 GitHub Pages 或其他部署。
-- 第二大腦的專案駕駛艙位於 `C:\Users\chang\我的雲端硬碟\2ndbrain\soil-deck-skills-專案駕駛艙.md`。
+
+## 理論來源
+
+本專案以李俊儀教授提出的 SOIL Teaching Deck Workflow 為教學設計基礎；各 Skill 內保留可獨立執行的流程摘要，不依賴個人電腦上的外部筆記路徑。

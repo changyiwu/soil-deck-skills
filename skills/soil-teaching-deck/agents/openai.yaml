@@ -1,0 +1,4 @@
+interface:
+  display_name: "SOIL Teaching Deck"
+  short_description: "用 SOIL 六引擎建立與改善可編輯教學簡報"
+  default_prompt: "Use $soil-teaching-deck to turn my teaching material into an editable, classroom-ready PowerPoint deck."

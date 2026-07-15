@@ -18,7 +18,7 @@ description: 建立由 YAML 驅動、可攜式單一檔案的 SOIL 互動 HTML �
 
 ## 共用 SOIL 核心
 
-從 `references/soil-deck-core.md` 中與渲染器無關的欄位開始，再用 `assets/interactive-spec-template.yaml` 的 HTML 互動與無障礙欄位擴充。
+從 `references/soil-deck-core.md` 中與渲染器無關的欄位開始，再依 `references/yaml-profile.md` 與 `assets/interactive-spec-template.yaml` 加入 HTML 互動與無障礙欄位。
 
 使用下列設定軸：
 
@@ -61,24 +61,25 @@ description: 建立由 YAML 驅動、可攜式單一檔案的 SOIL 互動 HTML �
 驗證互動 YAML：
 
 ```powershell
-python .\scripts\validate_interactive_spec.py --spec .\spec.yaml
+python "<soil-html-deck-dir>\scripts\validate_interactive_spec.py" --spec .\spec.yaml
 ```
 
 將生成的素材嵌入最終 HTML：
 
 ```powershell
-python .\scripts\embed_assets.py --template .\slides.template.html --output .\slides.html --asset COVER=.\assets\cover.png
+python "<soil-html-deck-dir>\scripts\embed_assets.py" --template .\slides.template.html --output .\slides.html --asset COVER=.\assets\cover.png
 ```
 
 驗證最終獨立簡報：
 
 ```powershell
-python .\scripts\verify_html.py --html .\slides.html --spec .\spec.yaml --strict-offline
+python "<soil-html-deck-dir>\scripts\verify_html.py" --html .\slides.html --spec .\spec.yaml --strict-offline
 ```
 
 ## 參考文件
 
 - 遷移或撰寫 YAML 前，閱讀 `references/soil-deck-core.md`。
+- 建立互動規格時，閱讀 `references/yaml-profile.md`。
 - 指派互動前，閱讀 `references/interaction-router.md`。
 - 實作 HTML 前，閱讀 `references/html-patterns.md`。
 - 交付前，閱讀 `references/validation.md`。

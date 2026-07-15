@@ -2,23 +2,7 @@
 
 圖片、PowerPoint 與 HTML 輸出共用一套與渲染器無關的規劃模型。
 
-## 必要的根層區段
-
-```yaml
-schema_version: "soil_interactive_deck_v1"
-deck: {}
-canvas: {}
-soil_flow: {}
-design_system: {}
-layout_router: {}
-interaction_router: {}
-slides: []
-validation: {}
-```
-
-`design_system` 管理固定視覺框架；`layout_router` 管理受控的頁面輪廓；`interaction_router` 將語意關係對應至允許的行為；`slides` 管理教學資料。
-
-## 必要的投影片欄位
+核心欄位涵蓋受眾、目的、SOIL 流程、設計系統、頁面角色、學習任務、核心重點、語意結構、可見文字、僅供講者使用的內容，以及視覺意圖。渲染器專屬的座標與行為須放在核心之外。
 
 ```yaml
 - page: 1
@@ -30,9 +14,7 @@ validation: {}
   layout: {id: "cover_hero", variant: "left_title_right_visual"}
   visible_text: {title: "Short title"}
   speaker_only: "What the teacher explains aloud"
-  visual: {mode: "baked", brief: "Concrete image brief"}
-  interaction: {type: "none", goal: "", fallback: "Static cover"}
-  accessibility: {keyboard: true, touch: true, reduced_motion: true}
+  visual: {brief: "Concrete visual intent"}
 ```
 
 ## 渲染器對應
@@ -44,6 +26,5 @@ validation: {}
 | `layout.id` | 圖片構圖 | 響應式元件 |
 | `semantic_structure` | 視覺關係 | 互動路由 |
 | `speaker_only` | 備忘稿或講述內容 | 選用的講者模式 |
-| `interaction` | 忽略／靜態備援 | 即時 HTML／SVG／Canvas 行為 |
 
-不得在核心中編寫渲染器專屬座標。PowerPoint 疊字或 HTML 中斷點只能存放在渲染器專屬區塊內。
+將 Image Deck 升級為 HTML 時，保留核心內容，並加入 HTML 專屬的 `interaction`、`accessibility`、響應式行為與靜態備援欄位。除非現有核心不完整，否則不需重新進行概念規劃。
