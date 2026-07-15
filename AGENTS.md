@@ -6,7 +6,7 @@
 - **本機路徑**：`C:\Users\chang\我的雲端硬碟\agents\soil-deck-skills`
 - **GitHub origin**：`https://github.com/changyiwu/soil-deck-skills.git`
 - **GitHub upstream**：`https://github.com/mathruffian-dot/soil-deck-skills.git`
-- **預設分支**：`master`
+- **預設分支**：`main`
 - **Firebase**：未連結。
 - **部署**：未啟用 GitHub Pages 或其他部署。
 
@@ -32,8 +32,8 @@
 
 - 修改前先檢查 `git status`，保留不屬於目前任務的變更。
 - 使用繁體中文撰寫說明文件；程式碼、YAML 欄位、版型 ID、命令與必要的英文提示詞保持原樣。
-- 當使用者要求 commit 或 push 時，預設直接提交並推送至 `changyiwu/soil-deck-skills` 的 `master`，不建立功能分支或 Pull Request；除非使用者當次另有指定。
-- 推送前先抓取並確認 `origin/master` 沒有未整合的新變更，不使用 force push。
+- 當使用者要求 commit 或 push 時，預設直接提交並推送至 `changyiwu/soil-deck-skills` 的 `main`，不建立功能分支或 Pull Request；除非使用者當次另有指定。
+- 推送前先抓取並確認 `origin/main` 沒有未整合的新變更，不使用 force push。
 - `upstream` 只用來追蹤原始專案，不作為預設推送目的地。
 
 ## 驗證規則
