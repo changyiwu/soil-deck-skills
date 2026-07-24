@@ -46,7 +46,7 @@ def validate_markdown() -> None:
     portable_files = [ROOT / "README.md", *sorted((ROOT / "skills").rglob("*.md"))]
     forbidden = re.compile(r"(?:(?<![A-Za-z])[A-Za-z]:[\\/]|/home/|/mnt/|/sessions/|~/\.claude/)")
     link_pattern = re.compile(r"\[[^\]]+\]\(([^)#]+)(?:#[^)]+)?\)")
-    for path in [ROOT / "AGENTS.md", *portable_files]:
+    for path in [ROOT / "agents.md", *portable_files]:
         text = path.read_text(encoding="utf-8")
         fences = sum(1 for line in text.splitlines() if line.strip().startswith("```"))
         if fences % 2:
